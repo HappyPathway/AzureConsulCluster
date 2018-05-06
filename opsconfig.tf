@@ -1,5 +1,7 @@
 resource "null_resource" "ops_config" {
-  
+  depends_on = [
+    "azurerm_public_ip.api"
+  ]
   count = "${var.count}"
   # Changes to any instance of the cluster requires re-provisioning
   triggers {
