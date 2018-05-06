@@ -17,7 +17,6 @@ resource "azurerm_network_security_group" "ssh" {
 
     tags {
         service = "${var.service_name}"
-        environment = "${var.env}"
     }
 }
 
@@ -40,6 +39,5 @@ resource "azurerm_network_security_group" "consul" {
 
     tags {
         service = "${var.service_name}"
-        environment = "${var.env}"
     }
 }
