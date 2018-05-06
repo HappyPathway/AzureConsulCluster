@@ -1,6 +1,8 @@
 {
   "datacenter": "{{ consul_cluster }}",
   "data_dir": "/opt/consul",
+  "bind_addr": "0.0.0.0",
+  "client_addr": "0.0.0.0",
   "log_level": "INFO",
   "node_name": "{{ ansible_hostname }}",
   "server": true,
