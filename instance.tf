@@ -70,6 +70,7 @@ resource "azurerm_virtual_machine" "avm" {
 
   tags {
     service = "${var.service_name}"
+    consul_datacenter = "${var.consul_cluster}"
   }
 }
 
