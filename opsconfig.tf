@@ -1,6 +1,6 @@
 resource "null_resource" "ops_config" {
   
-  count = "${var.datadog_monitor ? var.count : 0}"
+  count = "${var.count}"
   # Changes to any instance of the cluster requires re-provisioning
   triggers {
     cluster_instance_ids = "${join(",", azurerm_virtual_machine.avm.*.id)}"
