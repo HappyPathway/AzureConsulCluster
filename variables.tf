@@ -48,5 +48,3 @@ variable "service_name" {
 }
 
 variable "subnet_id" {}
-
-variable "env" {}
