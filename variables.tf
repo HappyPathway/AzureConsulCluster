@@ -2,6 +2,10 @@ variable "location" {
     default = "West US 2"
 }
 
+variable "resource_group" {
+    default = "app-staging"
+}
+
 variable "count" {
     default = 3
 }
@@ -43,3 +47,7 @@ variable "azure_secret" {}
 variable "service_name" {
     default = "consul-cluster"
 }
+
+variable "subnet_id" {}
+
+variable "env" {}

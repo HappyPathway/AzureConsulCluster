@@ -36,9 +36,6 @@
     - name: setup config file
       template: src=consul-default.json.j2 dest={{ consul_config_file }} mode=0755 owner=root
 
-    - name: setup service definition
-      template: src=service.json.j2 dest={{ consul_config_dir }}/{{ service_name }}.json mode=0755 owner=root
-
     - name: install supervisor
       apt: name=supervisor state=installed
 

@@ -1,5 +1,5 @@
 resource "null_resource" "consul" {
-  count = "${var.register_service ? var.count : 0}"
+  count = "${var.count}"
   # Changes to any instance of the cluster requires re-provisioning
   triggers {
     cluster_instance_ids = "${join(",", azurerm_virtual_machine.avm.*.id)}"
@@ -35,7 +35,7 @@ resource "null_resource" "consul" {
 
   provisioner "remote-exec" {
     inline = [
-      "sudo ansible-playbook /tmp/playbooks/consul_agent.yaml -c local -e env=${var.env} -e consul_cluster=${var.consul_cluster} -e azure_subscription=${var.azure_subscription} -e azure_tenant=${var.azure_tenant} -e azure_client=${var.azure_client} -e azure_secret=${var.azure_secret} -e service_name=${var.service_name} -e service_port=${var.service_port}",
+      "sudo ansible-playbook /tmp/playbooks/consul_agent.yaml -c local -e consul_cluster=${var.consul_cluster} -e azure_subscription=${var.azure_subscription} -e azure_tenant=${var.azure_tenant} -e azure_client=${var.azure_client} -e azure_secret=${var.azure_secret}",
       "sudo rm -rf /tmp/playbooks"
     ]
   }

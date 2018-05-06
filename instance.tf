@@ -1,7 +1,7 @@
 resource "azurerm_managed_disk" "amd" {
-  name                 = "${var.service_name}-${var.env}-amd${format("%03d", count.index + 1)}"
+  name                 = "${var.service_name}-amd${format("%03d", count.index + 1)}"
   location             = "${var.location}"
-  resource_group_name  = "${azurerm_resource_group.arg.name}"
+  resource_group_name  = "${var.resource_group}"
   storage_account_type = "Standard_LRS"
   create_option        = "Empty"
   disk_size_gb         = "${var.disk_size}"
@@ -9,17 +9,16 @@ resource "azurerm_managed_disk" "amd" {
 }
 
 resource "azurerm_virtual_machine" "avm" {
-  name                  = "${var.service_name}-${var.env}-avm${format("%03d", count.index + 1)}"
-  location              = "${azurerm_resource_group.arg.location}"
-  resource_group_name  = "${azurerm_resource_group.arg.name}"
+  name                  = "${var.service_name}-avm${format("%03d", count.index + 1)}"
+  location              = "${var.location}"
+  resource_group_name  = "${var.resource_group}"
   network_interface_ids = ["${element(azurerm_network_interface.ani.*.id, count.index)}"]
   vm_size               = "Standard_DS1_v2"
   count                 = "${var.count}"
   depends_on = [
                 "azurerm_public_ip.api",
                 "azurerm_network_interface.ani",
-                "azurerm_managed_disk.amd",
-                "azurerm_network_security_group.sg"
+                "azurerm_managed_disk.amd"
                 ]
 
   # Uncomment this line to delete the OS disk automatically when deleting the VM
@@ -36,7 +35,7 @@ resource "azurerm_virtual_machine" "avm" {
   }
 
   storage_os_disk {
-    name              = "${var.service_name}-${var.env}-os${format("%03d", count.index + 1)}"
+    name              = "${var.service_name}-os${format("%03d", count.index + 1)}"
     caching           = "ReadWrite"
     create_option     = "FromImage"
     managed_disk_type = "Standard_LRS"
@@ -44,7 +43,7 @@ resource "azurerm_virtual_machine" "avm" {
 
   # Optional data disks
   storage_data_disk {
-    name              = "${var.service_name}-${var.env}-disk${format("%03d", count.index + 1)}"
+    name              = "${var.service_name}-disk${format("%03d", count.index + 1)}"
     managed_disk_type = "Standard_LRS"
     create_option     = "Empty"
     lun               = 0
@@ -60,7 +59,7 @@ resource "azurerm_virtual_machine" "avm" {
   }
 
   os_profile {
-    computer_name  = "${var.service_name}-${var.env}-${format("%03d", count.index + 1)}"
+    computer_name  = "${var.service_name}-${format("%03d", count.index + 1)}"
     admin_username = "${var.system_user}"
     admin_password = "${var.system_password}"
   }
@@ -71,31 +70,30 @@ resource "azurerm_virtual_machine" "avm" {
 
   tags {
     service = "${var.service_name}"
-    environment = "${var.env}"
   }
 }
 
 resource "azurerm_public_ip" "api" {
-  name                         = "${var.service_name}-${var.env}-ip${format("%03d", count.index + 1)}"
+  name                         = "${var.service_name}-ip${format("%03d", count.index + 1)}"
   location                     = "${var.location}"
-  resource_group_name  = "${azurerm_resource_group.arg.name}"
+  resource_group_name  = "${var.resource_group}"
   public_ip_address_allocation = "Dynamic"
   idle_timeout_in_minutes      = 30
   count = "${var.count}"
   tags {
-    environment = "${var.env}"
     service = "${var.service_name}"
+    consul_datacenter = "${var.consul_cluster}"
   }
 }
 
 resource "azurerm_network_interface" "ani" {
-  name                = "${var.service_name}-${var.env}-ani${format("%03d", count.index + 1)}"
+  name                = "${var.service_name}-ani${format("%03d", count.index + 1)}"
   location            = "${var.location}"
-  resource_group_name  = "${azurerm_resource_group.arg.name}"
+  resource_group_name  = "${var.resource_group}"
   count = "${var.count}"
   ip_configuration {
     name                          = "${var.service_name}-ani${format("%03d", count.index + 1)}"
-    subnet_id                     = "${azurerm_subnet.asn.id}"
+    subnet_id                     = "${var.subnet_id}"
     private_ip_address_allocation = "dynamic"
     public_ip_address_id          = "${element(azurerm_public_ip.api.*.id, count.index)}"
   }

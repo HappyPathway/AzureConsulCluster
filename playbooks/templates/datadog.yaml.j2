@@ -4,5 +4,4 @@ apm_enabled: {{ datadog_apm_enabled|default('false') }}
 enable_gohai: {{ datadog_gohai_enabled|default('false') }}
 process_agent_enabled: {{ datdog_agent_enabled|default('false')}}
 tags: 
-  env: {{ env }}
   service: {{ service_name }}
