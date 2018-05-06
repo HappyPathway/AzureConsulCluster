@@ -1,8 +1,6 @@
 resource "null_resource" "consul" {
   count = "${var.count}"
-  depends_on = [
-    "null_resource.ansible_init"
-  ]
+
   # Changes to any instance of the cluster requires re-provisioning
   triggers {
     cluster_instance_ids = "${join(",", azurerm_virtual_machine.avm.*.id)}"
@@ -22,6 +20,11 @@ resource "null_resource" "consul" {
       destination = "/tmp/requirements.txt"
   }
 
+  provisioner "file" {
+      source = "${path.module}/playbooks"
+      destination = "/tmp/playbooks"
+  }
+
   provisioner "remote-exec" {
       inline = [
           "sudo apt-get update",
@@ -29,7 +32,7 @@ resource "null_resource" "consul" {
           "sudo pip install -r /tmp/requirements.txt"
       ]
   }
-  
+
   provisioner "remote-exec" {
     inline = [
       "sudo ansible-playbook /tmp/playbooks/consul_agent.yaml -c local -e consul_cluster=${var.consul_cluster} -e azure_subscription=${var.azure_subscription} -e azure_tenant=${var.azure_tenant} -e azure_client=${var.azure_client} -e azure_secret=${var.azure_secret}",

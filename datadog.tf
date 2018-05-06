@@ -1,7 +1,5 @@
 resource "null_resource" "datadog" {
-  depends_on = [
-    "null_resource.ansible_init"
-  ]
+  
   count = "${var.datadog_monitor ? var.count : 0}"
   # Changes to any instance of the cluster requires re-provisioning
   triggers {
@@ -15,6 +13,24 @@ resource "null_resource" "datadog" {
       host     = "${element(azurerm_public_ip.api.*.ip_address, count.index)}"
       user     = "${var.system_user}"
       password = "${var.system_password}"
+  }
+
+  provisioner "file" {
+      source = "${path.module}/files/requirements.txt"
+      destination = "/tmp/requirements.txt"
+  }
+
+  provisioner "file" {
+      source = "${path.module}/playbooks"
+      destination = "/tmp/playbooks"
+  }
+
+  provisioner "remote-exec" {
+      inline = [
+          "sudo apt-get update",
+          "sudo apt-get install -y python-pip",
+          "sudo pip install -r /tmp/requirements.txt"
+      ]
   }
 
   provisioner "remote-exec" {
