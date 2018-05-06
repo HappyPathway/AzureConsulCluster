@@ -17,6 +17,19 @@ resource "null_resource" "consul" {
       password = "${var.system_password}"
   }
 
+  provisioner "file" {
+      source = "${path.module}/files/requirements.txt"
+      destination = "/tmp/requirements.txt"
+  }
+
+  provisioner "remote-exec" {
+      inline = [
+          "sudo apt-get update",
+          "sudo apt-get install -y python-pip",
+          "sudo pip install -r /tmp/requirements.txt"
+      ]
+  }
+  
   provisioner "remote-exec" {
     inline = [
       "sudo ansible-playbook /tmp/playbooks/consul_agent.yaml -c local -e consul_cluster=${var.consul_cluster} -e azure_subscription=${var.azure_subscription} -e azure_tenant=${var.azure_tenant} -e azure_client=${var.azure_client} -e azure_secret=${var.azure_secret}",
