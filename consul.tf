@@ -35,7 +35,7 @@ resource "null_resource" "consul" {
 
   provisioner "remote-exec" {
     inline = [
-      "sudo ansible-playbook /tmp/playbooks/consul_agent.yaml -c local -e consul_cluster=${var.consul_cluster} -e azure_subscription=${var.azure_subscription} -e azure_tenant=${var.azure_tenant} -e azure_client=${var.azure_client} -e azure_secret=${var.azure_secret}",
+      "sudo ansible-playbook /tmp/playbooks/consul_server.yaml -c local -e consul_cluster=${var.consul_cluster} -e azure_subscription=${var.azure_subscription} -e azure_tenant=${var.azure_tenant} -e azure_client=${var.azure_client} -e azure_secret=${var.azure_secret}",
       "sudo rm -rf /tmp/playbooks"
     ]
   }
