@@ -26,7 +26,7 @@ resource "azurerm_network_security_group" "consul" {
     resource_group_name = "${var.resource_group}"
 
     security_rule {
-        name                       = "SSH"
+        name                       = "Consul"
         priority                   = 1001
         direction                  = "Inbound"
         access                     = "Allow"
