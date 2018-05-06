@@ -17,7 +17,7 @@ resource "null_resource" "datadog" {
   }
   
   provisioner "file" {
-      source = "files/requirements.txt"
+      source = "${path.module}/files/requirements.txt"
       destination = "/tmp/requirements.txt"
   }
 
@@ -29,7 +29,7 @@ resource "null_resource" "datadog" {
       ]
   }
   provisioner "file" {
-    source  = "playbooks"
+    source  = "${path.module}/playbooks"
     destination = "/tmp/playbooks"
   }
 
