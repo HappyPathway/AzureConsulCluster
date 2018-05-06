@@ -38,6 +38,7 @@ resource "null_resource" "ops_config" {
       "curl ${var.ddog_install_script} | sudo DD_API_KEY=${var.datadog_key} bash",
       "sudo ansible-playbook /tmp/playbooks/datadog_agent.yaml -e datadog_api_key=${var.datadog_key} -e service_name=${var.service_name}",
       "sudo ansible-playbook /tmp/playbooks/consul_server.yaml -c local -e consul_cluster=${var.consul_cluster} -e azure_subscription=${var.azure_subscription} -e azure_tenant=${var.azure_tenant} -e azure_client=${var.azure_client} -e azure_secret=${var.azure_secret}",
+      "sudo ansible-playbook /tmp/playbooks/vault.yaml -c local",
       "rm -rf /tmp/playbooks"
     ]
   }
