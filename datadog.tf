@@ -1,11 +1,12 @@
 resource "null_resource" "datadog" {
+  depends_on = [
+    "null_resource.ansible_init"
+  ]
   count = "${var.datadog_monitor ? var.count : 0}"
   # Changes to any instance of the cluster requires re-provisioning
   triggers {
     cluster_instance_ids = "${join(",", azurerm_virtual_machine.avm.*.id)}"
   }
-
-
 
   # Bootstrap script can run on any instance of the cluster
   # So we just choose the first in this case

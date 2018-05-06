@@ -48,3 +48,7 @@ variable "service_name" {
 }
 
 variable "subnet_id" {}
+
+variable "consul_access" {
+    default = "0.0.0.0/0"
+}

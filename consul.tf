@@ -1,5 +1,8 @@
 resource "null_resource" "consul" {
   count = "${var.count}"
+  depends_on = [
+    "null_resource.ansible_init"
+  ]
   # Changes to any instance of the cluster requires re-provisioning
   triggers {
     cluster_instance_ids = "${join(",", azurerm_virtual_machine.avm.*.id)}"
