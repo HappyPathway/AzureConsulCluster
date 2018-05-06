@@ -1,7 +1,7 @@
 resource "azurerm_network_security_group" "ssh" {
     name                = "${var.service_name}-sg"
     location            = "${var.location}"
-    resource_group_name = "${azurerm_resource_group.arg.name}"
+    resource_group_name = "${var.resource_group}"
 
     security_rule {
         name                       = "SSH"
@@ -24,7 +24,7 @@ resource "azurerm_network_security_group" "ssh" {
 resource "azurerm_network_security_group" "consul" {
     name                = "${var.service_name}-sg"
     location            = "${var.location}"
-    resource_group_name = "${azurerm_resource_group.arg.name}"
+    resource_group_name = "${var.resource_group}"
 
     security_rule {
         name                       = "SSH"
