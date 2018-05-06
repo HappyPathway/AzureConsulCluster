@@ -1,0 +1,8 @@
+---
+- hosts: localhost
+  tasks:
+    - name: setup config file
+      template: src=datadog.yaml.j2 dest=/etc/datadog-agent/datadog.yaml mode=0640 owner=dd-agent
+
+    - name: restart datadog
+      service: name=datadog-agent state=restarted
